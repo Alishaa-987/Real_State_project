@@ -1,5 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import cors from "cors";
 import authRouter from './routes/auth.route.js'
 import userRouter from './routes/user.route.js'
 import dotenv from 'dotenv';
@@ -12,6 +13,12 @@ mongoose.connect(process.env.Connection)
 const app = express();
 
 app.use(express.json());
+
+app.use(cors({
+  origin: "http://localhost:5173",   // frontend ka URL
+  credentials: true
+}));
+
 
 app.listen(3000, () => {
   console.log('Server is running on port 3000');
