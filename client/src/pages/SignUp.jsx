@@ -21,7 +21,16 @@ export default function SignUp() {
     e.preventDefault();
     try {
       setLoading(true);
-
+/*
+app.post("/api/auth/signUp", (req, res) => {
+  console.log(req.body);
+    res.json({
+    success: true,
+    message: "User registered successfully",
+    data: req.body,
+  });
+});
+*/
 
       const res = await fetch('http://localhost:3000/api/auth/signUp',
         {
