@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link , useNavigate} from 'react-router-dom';
 import { useState } from 'react';
+import OAth from '../components/OAth';
 
 export default function SignUp() {
   const [formData, setFormData] = useState({});
@@ -106,9 +107,12 @@ export default function SignUp() {
              hover:from-indigo-700 hover:to-blue-800 
              transition duration-200"
           >
+            
+
             {/* Sign Up */}
             {loading ? 'Loading...' : 'Sign Up'}
           </button>
+          <OAth/>
         </form>
 
         {/* Link */}
