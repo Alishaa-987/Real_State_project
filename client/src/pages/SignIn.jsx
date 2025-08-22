@@ -9,6 +9,8 @@ export default function SignIn() {
   const [formData, setFormData] = useState({});
 const {loading , error } = useSelector((state)=> state.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();  // 👈 ye missing tha
+
   const handleChange = (e) => {
     // form data is used to store whatever the user type
     setFormData({
@@ -43,7 +45,7 @@ const {loading , error } = useSelector((state)=> state.user);
       dispatch(signInSuccess(data));
       navigate('/')
     } catch(err) {
-     dispatch(signInFailure(error.message));
+     dispatch(signInFailure(err.message));
     }
 
   };

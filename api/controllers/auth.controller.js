@@ -10,9 +10,8 @@ export const signUp = async (req , res , next)=>{
     const hashPassword = await bcryptjs.hashSync(password , 12);
     const newUser = new User ({username , email , password:hashPassword});
         await newUser.save();
-        res.status(201).json({
-            success:true,
-            message:"User created successfully"});
+    const {password: pass , ...rest} = newUser._doc
+        res.status(201).json(rest);
 
     }catch(error){
         next(error);
@@ -54,9 +53,10 @@ export const google = async (req , res , next)=>{
             const generatePassowrd = Math.random().toString(36).slice(-8)+Math.random().toString(36).slice(-8);
             const hashPassword = bcryptjs.hashSync(generatePassowrd , 10);
             const newUser = new User ({username: req.body.name.split(" ").join("").toLowerCase()+ Math.random().toString(36).slice(-4)
-                , email:req.body.email , password:hashPassword,
-                avatar:req.body.photo
-            })
+                , email:req.body.email 
+                , password:hashPassword,
+                  avatar:req.body.photo
+            });
             await newUser.save();
             const token = jwt.sign({id:newUser._id} , process.env.JWT_SECRET);
             const {password : pass , ...rest}=newUser._doc;

@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
     },
     avatar:{
         type:String,
-        default:"https://images.rawpixel.com/image_png_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTAxL3JtNjA5LXNvbGlkaWNvbi13LTAwMi1wLnBuZw.png"
+        default:"https://th.bing.com/th/id/OIP.NWzDX-AUwWY-dKHu3n54iAHaEJ?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3"
     },
 
 

@@ -5,9 +5,9 @@ import Home from './pages/Home'
 import Profile from './pages/Profile'
 import SignUp from './pages/SignUp'
 import About from './pages/About'
-import SignIn from './pages/Signin'
+import SignIn from './pages/SignIn'
 import Header from './components/Header'
-
+import PrivateRoute from './components/PrivateRoute'
 function App() {
   const [count, setCount] = useState(0)
 
@@ -20,13 +20,15 @@ function App() {
         <Route path='/About' element={<About/>}/>
         <Route path='/SignIn' element={<SignIn/>}/>
         <Route path='/SignUp' element={<SignUp/>}/>
-        <Route path='/Profile' element={<Profile/>}/>
+        <Route  element={<PrivateRoute/>}>
 
+          <Route path='/Profile' element={<Profile/>}/>
+        </Route>
 
       </Routes>
       </BrowserRouter>
     </>
   )
-}
+};
 
 export default App

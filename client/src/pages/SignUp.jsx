@@ -42,9 +42,11 @@ export default function SignUp() {
 
         return;
       }
-      setLoading(false);
-      setError(null);
-      navigate('/signIn')
+  setLoading(false);
+  setError(null);
+  // Set a flag in localStorage to indicate recent sign up
+  localStorage.setItem('justSignedUp', 'true');
+  navigate('/')
     } catch(err) {
       setLoading(false);
       setError(err.message);
