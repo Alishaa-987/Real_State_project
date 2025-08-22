@@ -1,3 +1,4 @@
+
 body {
-  background-color: #f8fafc; /* Tailwind's slate-50 */
+  background-color: bg-gray-100; /* Tailwind bg-indigo-80 hex value */
 }
