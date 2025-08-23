@@ -5,11 +5,12 @@ import bcrypt from 'bcryptjs';
 import authRouter from './routes/auth.route.js'
 import userRouter from './routes/user.route.js'
 import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
 dotenv.config({ path: './api/.env' }); // path is relative to where you run the script it is compulsory to define becaus i get a lot of error by not defining the path
 
 
 const app = express();
-
+app.use(cookieParser());
 app.use(express.json());
 
 app.use(cors({
