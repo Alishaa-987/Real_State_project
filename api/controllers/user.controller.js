@@ -26,9 +26,9 @@ const updateUser = await User.findByIdAndUpdate(req.params.id,{
     }
         },{new:true})
 
-        const {passowrd , ...rest} = updateUser._doc
+        const {password , ...rest} = updateUser._doc
         res.status(200).json(rest)
-    }catch{
+    } catch (error){
         next(error);
     }
  };

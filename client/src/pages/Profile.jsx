@@ -1,115 +1,179 @@
-
-import React, { useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { signInStart } from '../redux/user/userSlice';
+import { updateUserStart, updateUserSuccess, updateUserFailure } from '../redux/user/userSlice';
+import { set } from 'mongoose';
 
 export default function Profile() {
-  const [image, setImage] = useState(null);
-  const [preview, setPreview] = useState(null);
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, loading, error } = useSelector((state) => state.user);
+  const [updateSuccess , setUpdateSuccess] = useState(false); // 🔹 new state for success message
+  const [formData, setFormData] = useState({
+    username: currentUser?.username || "",
+    email: currentUser?.email || "",
+    password: "",
+    avatar: currentUser?.avatar || "" // 🔹 add avatar to state
+  });
+
+  const dispatch = useDispatch();
+  const [showPassword, setShowPassword] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef(null);
 
-  // Function to open file picker
-  const handleImageClick = () => {
-    fileInputRef.current.click();
-  };
+  // Handle file upload to Cloudinary
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-  // Function to handle selected file and preview
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setImage(file);
-      setPreview(URL.createObjectURL(file));
-      console.log("Selected file:", file);
+    const data = new FormData();
+    data.append("file", file);
+    data.append("upload_preset", "profile_preset"); // 🔹 replace with your Cloudinary preset
+    data.append("cloud_name", "dkukhmlxh"); // 🔹 replace with your Cloudinary cloud name
+
+    try {
+      setUploading(true);
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/dkukhmlxh/image/upload`,
+        {
+          method: "POST",
+          body: data
+        }
+      );
+      const uploaded = await res.json();
+      setFormData({ ...formData, avatar: uploaded.secure_url });
+      setUploading(false);
+    } catch (err) {
+      console.error("Cloudinary Upload Error:", err);
+      setUploading(false);
     }
   };
 
-  // Function to upload image to Cloudinary
-  const handleUpload = async () => {
-    if (!image) return alert("Please select an image!");
+  // Handle input change
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
 
-    const formData = new FormData();
-    formData.append("file", image);
-    formData.append("upload_preset", "profile_preset"); // create free preset in Cloudinary
-
+  // Handle form submit
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    dispatch(signInStart());
     try {
-      const res = await fetch(
-        "https://api.cloudinary.com/v1_1/dkukhmlxh/image/upload",
-        { method: "POST", body: formData }
-      );
+      dispatch(updateUserStart());
+      const res = await fetch(`/api/user/update/${currentUser._id}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
       const data = await res.json();
-      console.log("Uploaded URL:", data.secure_url);
+      if (data.success === false) {
+        dispatch(updateUserFailure(data.message));
+        return;
+      }
+      dispatch(updateUserSuccess(data));
+      setUpdateSuccess(true); // 🔹 set success message
+// dispatch(updateUserSuccess({ ...currentUser, photoURL: downloadURL }));
 
-      // TODO: Save URL in your Redux store or MongoDB
-      // dispatch(updateUserAvatar(data.secure_url));
     } catch (err) {
-      console.error(err);
+      dispatch(updateUserFailure(err.message));
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md border border-gray-100">
-
+        
         {/* Heading */}
-        <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
           Profile
-        </h1>
+        </h2>
 
-        {/* Form */}
-        <form className="space-y-5 flex flex-col gap-4">
+        {/* Avatar Upload */}
+        <div className="flex flex-col items-center mb-4">
+          <img
+            src={formData.avatar || "https://via.placeholder.com/150"}
+            alt="avatar"
+            className="w-24 h-24 rounded-full object-cover mb-2 cursor-pointer"
+            onClick={() => fileInputRef.current.click()}
+          />
           <input
-            type='file'
-            ref={fileInputRef}
+            type="file"
+            accept="image/*"
             hidden
-            accept='image/*'
+            ref={fileInputRef}
             onChange={handleFileChange}
           />
+          {uploading && <p className="text-sm text-gray-500">Uploading...</p>}
+        </div>
 
-          {/* Profile Image */}
-          <div className="flex justify-center">
-            <img
-              src={preview || currentUser.avatar || currentUser.photoURL}
-              alt="profile"
-              className="rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2"
-              onClick={handleImageClick}
+        {/* Form */}
+        <form className="space-y-5" onSubmit={handleSubmit}>
+          {/* Username */}
+          <div>
+            <label className="block text-gray-700 text-sm font-medium mb-1">Username</label>
+            <input
+              id="username"
+              type="text"
+              placeholder="Enter your username"
+              value={formData.username}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
             />
           </div>
 
-          <input
-            type="text"
-            placeholder="username"
-            id="username"
-            className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
-          />
+          {/* Email */}
+          <div>
+            <label className="block text-gray-700 text-sm font-medium mb-1">Email</label>
+            <input
+              id="email"
+              type="email"
+              placeholder="Enter your email"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+            />
+          </div>
 
-          <input
-            type="text"
-            placeholder="email"
-            id="email"
-            className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
-          />
+          {/* Password with toggle */}
+          <div>
+            <label className="block text-gray-700 text-sm font-medium mb-1">Password</label>
+            <div className="relative">
+              <input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                value={formData.password}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition pr-10"
+              />
+              <span
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-2 cursor-pointer text-sm text-gray-600"
+              >
+                {showPassword ? "Hide" : "Show"}
+              </span>
+            </div>
+          </div>
 
-          <input
-            type="text"
-            placeholder="password"
-            id="password"
-            className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
-          />
-
-          <button className="w-full py-2 rounded-xl font-semibold text-white shadow-md 
-          bg-gradient-to-r from-indigo-500 to-blue-700 
-          hover:from-indigo-700 hover:to-blue-800 
-          transition duration-200">
-            Update
+          {/* Button */}
+          <button
+            disabled={loading || uploading}
+            type="submit"
+            className="w-full py-2 rounded-xl font-semibold text-white shadow-md 
+              bg-gradient-to-r from-indigo-500 to-blue-700 
+              hover:from-indigo-700 hover:to-blue-800 
+              transition duration-200 disabled:opacity-50"
+          >
+            {loading || uploading ? "Loading..." : "Update Profile"}
           </button>
         </form>
-
-        {/* Delete / Sign Out */}
-        <div className="flex justify-between mt-5">
-          <span className="text-red-700 cursor-pointer">Delete Account</span>
-          <span className="text-red-700 cursor-pointer">Sign Out</span>
-        </div>
+      <div className='flex flex-row justify-between p-3 font-stretch-normal'>
+        <p className="text-red-700">Delete Account</p>
+        <p className="text-red-700">Sign Out</p>
+      </div>
+        {/* Error */}
+        {error && <p className="text-red-500 text-center mt-4">{error}</p>}
+        {updateSuccess && <p className="text-green-500 text-center mt-4">Profile updated successfully!</p>}
       </div>
     </div>
-  );
-}
+  )
+
+};
