@@ -5,6 +5,8 @@ import bcrypt from 'bcryptjs';
 import authRouter from './routes/auth.route.js'
 import userRouter from './routes/user.route.js'
 import dotenv from 'dotenv';
+import listingRouter from './routes/listing.route.js';
+import Listing from './models/listing.model.js';  
 import cookieParser from 'cookie-parser';
 dotenv.config({ path: './api/.env' }); // path is relative to where you run the script it is compulsory to define becaus i get a lot of error by not defining the path
 
@@ -23,6 +25,8 @@ app.use(cors({
 
 app.use('/api/auth' , authRouter);
 app.use("/api/user" , userRouter);
+app.use("/api/listing" , listingRouter);
+
 
 app.use((err , req , res , next )=>{
     const statusCode = err.statusCode || 500;
@@ -41,12 +45,12 @@ mongoose.connect(process.env.Connection, {
   useUnifiedTopology: true,
 })
 .then(() =>{
-  console.log('✅ MongoDB connected')
+  console.log(' MongoDB connected')
   app.listen(3000, () => {
   console.log('Server is running on port 3000');
 });
 })
-.catch(err => console.error('❌ Connection error:', err));
+.catch(err => console.error(' Connection error:', err));
 
 
 

@@ -1,4 +1,2 @@
-
-body {
-  background-color: bg-gray-100; /* Tailwind bg-indigo-80 hex value */
-}
+@tailwindcss/preflight;
+@tailwind utilities;
