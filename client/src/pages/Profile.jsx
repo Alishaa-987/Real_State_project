@@ -5,6 +5,8 @@ import { updateUserStart, updateUserSuccess, updateUserFailure } from '../redux/
 import { deleteUserFailure , deleteUserStart , deleteUserSuccess } from '../redux/user/userSlice.js';
 import { signOutUserFailure , signOutUserSuccess, signOutUserStart } from '../redux/user/userSlice';
 import { set } from 'mongoose';
+import {Link} from 'react-router-dom';
+
 
 export default function Profile() {
   const { currentUser ,loading, error } = useSelector((state) => state.user);
@@ -203,6 +205,12 @@ const handleDeleteUser = async () => {
           >
             {loading || uploading ? "Loading..." : "Update Profile"}
           </button>
+
+      <Link className= "max-w-full px-35 bg-green-700 text-white py-2.5 rounded-xl font-semibold  text-center " to={"create-listing"}>
+      Create Listing
+      </Link>
+
+
         </form>
       <div className='flex flex-row justify-between p-3 font-stretch-normal'>
         <p onClick={handleDeleteUser} className="text-red-700 cursor-pointer">Delete Account</p>
