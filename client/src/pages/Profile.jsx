@@ -1,11 +1,12 @@
 import React, { useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { signInStart } from '../redux/user/userSlice';
-import { updateUserStart, updateUserSuccess, updateUserFailure } from '../redux/user/userSlice';
+import {   signInStart } from '../redux/user/userSlice';
+import { updateUserStart, updateUserSuccess, updateUserFailure } from '../redux/user/userSlice.js';
+import { deleteUserFailure , deleteUserStart , deleteUserSuccess } from '../redux/user/userSlice.js';
 import { set } from 'mongoose';
 
 export default function Profile() {
-  const { currentUser, loading, error } = useSelector((state) => state.user);
+  const { currentUser ,loading, error } = useSelector((state) => state.user);
   const [updateSuccess , setUpdateSuccess] = useState(false); // 🔹 new state for success message
   const [formData, setFormData] = useState({
     username: currentUser?.username || "",
@@ -18,6 +19,7 @@ export default function Profile() {
   const [showPassword, setShowPassword] = useState(false);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef(null);
+  // const {currentUser} = useSelector((state) => state.user);
 
   // Handle file upload to Cloudinary
   const handleFileChange = async (e) => {
@@ -76,6 +78,28 @@ export default function Profile() {
       dispatch(updateUserFailure(err.message));
     }
   };
+
+
+const handleDeleteUser = async () => {
+  try {
+    dispatch(deleteUserStart());
+    const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+      method: 'DELETE',
+      credentials:"include",
+    });
+
+    const data = await res.json();
+    if (data.success === false){
+      dispatch(deleteUserFailure(data.message));
+      return;
+    }
+
+    dispatch(deleteUserSuccess(data)); // clears redux user state
+  } catch (err) {
+    dispatch(deleteUserFailure(err.message));
+    console.error(err);
+  }
+};
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
@@ -166,11 +190,11 @@ export default function Profile() {
           </button>
         </form>
       <div className='flex flex-row justify-between p-3 font-stretch-normal'>
-        <p className="text-red-700">Delete Account</p>
-        <p className="text-red-700">Sign Out</p>
+        <p onClick={handleDeleteUser} className="text-red-700 cursor-pointer">Delete Account</p>
+        <p className="text-red-700 cursor-pointer">Sign Out</p>
       </div>
         {/* Error */}
-        {error && <p className="text-red-500 text-center mt-4">{error}</p>}
+        {/* {error && <p className="text-red-500 text-center mt-4">{error}</p>} */}
         {updateSuccess && <p className="text-green-500 text-center mt-4">Profile updated successfully!</p>}
       </div>
     </div>
