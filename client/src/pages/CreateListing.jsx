@@ -65,11 +65,11 @@ export default function CreateListing() {
         setUploading(false);
       } catch (err) {
         console.error(err);
-        setImageUploadError("⚠️ Image upload failed");
+        setImageUploadError(" Image upload failed");
         setUploading(false);
       }
     } else {
-      setImageUploadError("⚠️ You can only upload up to 6 images");
+      setImageUploadError(" You can only upload up to 6 images");
       setUploading(false);
     }
   };
@@ -137,7 +137,7 @@ const handleChange = (e) => {
         },
         body: JSON.stringify({
           ...formData,
-          UserRef: currentUser._id,
+          userRef: currentUser._id,
         }),
       });
 

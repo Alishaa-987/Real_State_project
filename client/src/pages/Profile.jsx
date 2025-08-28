@@ -1,16 +1,16 @@
 import React, { useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {   signInStart } from '../redux/user/userSlice';
-import { updateUserStart, updateUserSuccess, updateUserFailure } from '../redux/user/userSlice.js';
-import { deleteUserFailure , deleteUserStart , deleteUserSuccess } from '../redux/user/userSlice.js';
-import { signOutUserFailure , signOutUserSuccess, signOutUserStart } from '../redux/user/userSlice';
+import { signInStart } from '../redux/user/userSlice';
+import { updateUserStart, updateUserSuccess, updateUserFailure, deleteUserFailure, deleteUserStart, deleteUserSuccess, signOutUserFailure, signOutUserSuccess, signOutUserStart } from '../redux/user/userSlice.js';
 import { set } from 'mongoose';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 
 export default function Profile() {
-  const { currentUser ,loading, error } = useSelector((state) => state.user);
-  const [updateSuccess , setUpdateSuccess] = useState(false); // 🔹 new state for success message
+  const { currentUser, loading, error } = useSelector((state) => state.user);
+  const [showListingError, setShowListingError] = useState(false);
+  const [userListings, setUserListings] = useState([]);
+  const [updateSuccess, setUpdateSuccess] = useState(false); // 🔹 new state for success message
   const [formData, setFormData] = useState({
     username: currentUser?.username || "",
     email: currentUser?.email || "",
@@ -75,7 +75,7 @@ export default function Profile() {
       }
       dispatch(updateUserSuccess(data));
       setUpdateSuccess(true); // 🔹 set success message
-// dispatch(updateUserSuccess({ ...currentUser, photoURL: downloadURL }));
+      // dispatch(updateUserSuccess({ ...currentUser, photoURL: downloadURL }));
 
     } catch (err) {
       dispatch(updateUserFailure(err.message));
@@ -83,45 +83,60 @@ export default function Profile() {
   };
 
 
-const handleDeleteUser = async () => {
-  try {
-    dispatch(deleteUserStart());
-    const res = await fetch(`/api/user/delete/${currentUser._id}`, {
-      method: 'DELETE',
-      credentials:"include",
-    });
+  const handleDeleteUser = async () => {
+    try {
+      dispatch(deleteUserStart());
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: 'DELETE',
+        credentials: "include",
+      });
 
-    const data = await res.json();
-    if (data.success === false){
-      dispatch(deleteUserFailure(data.message));
-      return;
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(deleteUserFailure(data.message));
+        return;
+      }
+
+      dispatch(deleteUserSuccess(data)); // clears redux user state
+    } catch (err) {
+      dispatch(deleteUserFailure(err.message));
+      console.error(err);
     }
-
-    dispatch(deleteUserSuccess(data)); // clears redux user state
-  } catch (err) {
-    dispatch(deleteUserFailure(err.message));
-    console.error(err);
-  }
-};
-  const handleSignOut = async ()=>{
-    try{
+  };
+  const handleSignOut = async () => {
+    try {
       dispatch(signOutUserStart());
       const res = await fetch('/api/auth/signOut');
       const data = await res.json();
-      if (data.success === false){
+      if (data.success === false) {
         dispatch(signOutUserFailure(data.message));
         return;
       }
       dispatch(signOutUserSuccess(data));
-    }catch(error){
-        dispatch(signOutUserFailure(error.message));
+    } catch (error) {
+      dispatch(signOutUserFailure(error.message));
+    }
+  }
+
+  const handleShowListings = async () => {
+    try {
+      setShowListingError(false);
+      const res = await fetch(`/api/user/listings/${currentUser._id}`);
+      const data = await res.json();
+      if (data.success === false) {
+        setShowListingError(true);
+        return;
+      }
+      setUserListings(data);
+    } catch (error) {
+      setShowListingError(true);
     }
   }
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md border border-gray-100">
-        
+
         {/* Heading */}
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
           Profile
@@ -206,21 +221,47 @@ const handleDeleteUser = async () => {
             {loading || uploading ? "Loading..." : "Update Profile"}
           </button>
 
-      <Link className= "max-w-full px-35 bg-green-700 text-white py-2.5 rounded-xl font-semibold  text-center " to={"create-listing"}>
-      Create Listing
-      </Link>
+          <Link className="max-w-full px-35 bg-green-700 text-white py-2.5 rounded-xl font-semibold  text-center " to={"create-listing"}>
+            Create Listing
+          </Link>
 
 
         </form>
-      <div className='flex flex-row justify-between p-3 font-stretch-normal'>
-        <p onClick={handleDeleteUser} className="text-red-700 cursor-pointer">Delete Account</p>
-        <p onClick={handleSignOut} className="text-red-700 cursor-pointer">Sign Out</p>
-      </div>
+        <div className='flex flex-row justify-between p-3 font-stretch-normal'>
+          <p onClick={handleDeleteUser} className="text-red-700 cursor-pointer">Delete Account</p>
+          <p onClick={handleSignOut} className="text-red-700 cursor-pointer">Sign Out</p>
+        </div>
         {/* Error */}
         {/* {error && <p className="text-red-500 text-center mt-4">{error}</p>} */}
         {updateSuccess && <p className="text-green-500 text-center mt-4">Profile updated successfully!</p>}
+        <button onClick={handleShowListings} className='text-green-700 w-full'>Show Listings</button>
+        <p className='text-red-700 mt-5'>{showListingError ? "Error showing listings" : ""}</p>
+
+
+        {userListings &&
+         userListings.length > 0 &&
+         <div className='flex flex-col gap-4'>
+          <h1 className='text-center mt-7 text-2xl font-semibold'>Your Listings</h1>
+         {userListings.map((listings) => (
+          <div key={listings._id} className='border rounded-lg p-3 flex justify-between items-center gap-7'>
+            <Link to={`/listing/${listings._id}`}>
+              <img src={listings.imageUrls[0]} alt='listing cover'
+                className='h-18 w-25 object-contain' />
+            </Link>
+            <Link className='flex-1 text-slate-700 font-semibold 
+           hover:underline truncate' to={`/listing/${listings._id}`}>
+              <p>{listings.title}</p>
+            </Link>
+            <div className='flex flex-col items-center'>
+            <button className='text-red-700 uppercase font-semibold'>Delete</button>
+            <button className='text-green-700 uppercase font-semibold'>Edit</button>
+
+            </div>
+          </div>
+        ))}
+      </div>}
       </div>
     </div>
-  )
+  );
 
-};
+}
