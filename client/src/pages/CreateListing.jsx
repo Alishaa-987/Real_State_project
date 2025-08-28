@@ -9,13 +9,13 @@ export default function CreateListing() {
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({
     imageUrls: [],
-    name: "",
+    title:"",
     description: "",
     address: "",
     type: "rent",
-    bedrooms: 1,
-    bathrooms: 1,
-    regularPrice: "",
+    bedroom: 1,
+    bathroom: 1,
+    regularPrice: 50,
     discountPrice: 0,
     offer: false,
     parking: false,
@@ -39,8 +39,8 @@ export default function CreateListing() {
         for (let i = 0; i < files.length; i++) {
           const data = new FormData();
           data.append("file", files[i]);
-          data.append("upload_preset", "profile_preset"); // 🔴 apna preset daalna
-          data.append("cloud_name", "dkukhmlxh"); // 🔴 apna cloud_name daalna
+          data.append("upload_preset", "profile_preset");
+          data.append("cloud_name", "dkukhmlxh"); 
 
           const res = await fetch(
             "https://api.cloudinary.com/v1_1/dkukhmlxh/image/upload",
@@ -123,9 +123,9 @@ const handleChange = (e) => {
     e.preventDefault();
     try {
       if (formData.imageUrls.length < 1)
-        return setError("⚠️ You must upload at least one image");
+        return setError(" You must upload at least one image");
       if (+formData.regularPrice < +formData.discountPrice)
-        return setError("⚠️ Discount price must be lower than regular price");
+        return setError(" Discount price must be lower than regular price");
 
       setLoading(true);
       setError(false);
@@ -137,7 +137,7 @@ const handleChange = (e) => {
         },
         body: JSON.stringify({
           ...formData,
-          userRef: currentUser._id,
+          UserRef: currentUser._id,
         }),
       });
 
@@ -155,7 +155,6 @@ const handleChange = (e) => {
     }
   };
 
-  // 🟢 RETURN UI
   return (
     <main className="p-6 max-w-4xl mx-auto bg-white shadow-md rounded-lg">
       <h1 className="text-3xl font-semibold text-center mb-6 text-slate-700">
@@ -171,7 +170,7 @@ const handleChange = (e) => {
             type="text"
             placeholder="Name"
             className="border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400"
-            id="name"
+            id="title"
             maxLength="62"
             minLength="10"
             required
@@ -223,28 +222,31 @@ const handleChange = (e) => {
             <div className="flex items-center gap-2">
               <input
                 type="number"
-                id="bedrooms"
+                id="bedroom"
                 min="1"
                 max="10"
                 required
                 className="p-3 border rounded-lg"
                 onChange={handleChange}
-                value={formData.bedrooms}
+                value={formData.bedroom}
               />
               <p>Beds</p>
             </div>
+
             <div className="flex items-center gap-2">
               <input
                 type="number"
-                id="bathrooms"
+                id="bathroom"
                 min="1"
                 max="10"
                 required
                 className="p-3 border rounded-lg"
                 onChange={handleChange}
-                value={formData.bathrooms}
+                value={formData.bathroom}
               />
               <p>Baths</p>
+
+
               <input
                 type="number"
                 id="regularPrice"
@@ -257,11 +259,12 @@ const handleChange = (e) => {
               />
               <p>RegularPrice</p>
             </div>
-            <div className="flex items-center gap-2">
+            {formData.offer && (
+              <div className="flex items-center gap-2">
               <input
                 type="number"
                 id="discountPrice"
-                min="1"
+                min="0"
                 max="1000000"
                 required
                 className="p-3 border rounded-lg"
@@ -270,6 +273,8 @@ const handleChange = (e) => {
               />
               <p>Discounted Price</p>
             </div>
+        )}
+            
           </div>
         </div>
 
