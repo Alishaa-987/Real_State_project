@@ -132,10 +132,27 @@ export default function Profile() {
       setShowListingError(true);
     }
   }
+ const handleDeleteListing = async (listingId)=>{
+  try{
+    const res = await fetch(`/api/listing/delete/${listingId}`,{
+      method:"DELETE",
+    });
+    const data = await res.json();
+    if(data.success === false){
+      console.log(data.message);
+      return;
+    }
+    setUserListings((prev)=>
+      prev.filter((listing)=> listing._id !== listingId));
 
+  }catch(error){
+    console.log(error.message)
+  }
+
+ }
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md border border-gray-100">
+<div className="bg-white shadow-lg rounded-xl p-6 w-full max-w-lg border border-gray-200">
 
         {/* Heading */}
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
@@ -221,7 +238,7 @@ export default function Profile() {
             {loading || uploading ? "Loading..." : "Update Profile"}
           </button>
 
-          <Link className="max-w-full px-35 bg-green-700 text-white py-2.5 rounded-xl font-semibold  text-center " to={"create-listing"}>
+          <Link className="max-w-full px-45 bg-green-700 text-white py-2.5 rounded-xl font-semibold  text-center " to={"create-listing"}>
             Create Listing
           </Link>
 
@@ -253,8 +270,8 @@ export default function Profile() {
               <p>{listings.title}</p>
             </Link>
             <div className='flex flex-col items-center'>
-            <button className='text-red-700 uppercase font-semibold'>Delete</button>
-            <button className='text-green-700 uppercase font-semibold'>Edit</button>
+            <button  onClick={() => handleDeleteListing(listings._id)} className='text-red-700 uppercase font-semibold'>Delete</button>
+            <button  onClick={() => handleDeleteListing(listings._id)} className='text-green-700 uppercase font-semibold'>Edit</button>
 
             </div>
           </div>

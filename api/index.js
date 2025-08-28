@@ -8,6 +8,7 @@ import dotenv from 'dotenv';
 import listingRouter from './routes/listing.route.js';
 import Listing from './models/listing.model.js';  
 import cookieParser from 'cookie-parser';
+
 dotenv.config({ path: './api/.env' }); // path is relative to where you run the script it is compulsory to define becaus i get a lot of error by not defining the path
 
 
