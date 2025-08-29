@@ -13,7 +13,7 @@ import {
   FaParking,
   FaShare,
 } from 'react-icons/fa';
-// import Contact from '../components/Contact';
+import Contact from '../components/Contact';
 
 export default function Listing() {
   SwiperCore.use([Navigation]);
@@ -23,8 +23,9 @@ export default function Listing() {
   const [copied, setCopied] = useState(false);
   const [contact, setContact] = useState(false);
   const params = useParams();
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser} = useSelector((state) => state.user);
 
+    console.log('currentUser._id:', currentUser?._id, 'listing.userRef:', listing?.userRef);
   useEffect(() => {
     const fetchListing = async () => {
       try {
@@ -168,8 +169,8 @@ export default function Listing() {
               </li>
             </ul>
 
-            {/* Contact landlord */}
-            {currentUser && listing.userRef !== currentUser._id && !contact && (
+
+            {currentUser && !contact && (
               <button
                 onClick={() => setContact(true)}
                 className="bg-gradient-to-r from-indigo-600 to-blue-500 text-white rounded-lg uppercase hover:opacity-95 p-3 mt-4 transition"

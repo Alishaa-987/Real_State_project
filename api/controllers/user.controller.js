@@ -68,3 +68,17 @@ const updateUser = await User.findByIdAndUpdate(req.params.id,{
     return next(errorHandler(401 , "you can view you own listing!"));
   }
  };
+
+
+ export const getUser = async(req , res , next)=>{
+    try{
+if(!User) return next(errorHandler(404 , "User not found"));
+    const {password : pass , ...rest}=user._doc;
+
+    res.status(200).json(rest);
+    }catch(error){
+        next(error);
+    }
+    
+
+ }
