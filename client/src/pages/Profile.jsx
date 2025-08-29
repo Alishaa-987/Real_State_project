@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { signInStart } from '../redux/user/userSlice';
 import { updateUserStart, updateUserSuccess, updateUserFailure, deleteUserFailure, deleteUserStart, deleteUserSuccess, signOutUserFailure, signOutUserSuccess, signOutUserStart } from '../redux/user/userSlice.js';
 import { set } from 'mongoose';
+import listing from '../../../api/models/listing.model.js';
 import { Link } from 'react-router-dom';
 
 
@@ -271,8 +272,9 @@ export default function Profile() {
             </Link>
             <div className='flex flex-col items-center'>
             <button  onClick={() => handleDeleteListing(listings._id)} className='text-red-700 uppercase font-semibold'>Delete</button>
-            <button  onClick={() => handleDeleteListing(listings._id)} className='text-green-700 uppercase font-semibold'>Edit</button>
-
+            <Link to={`/update-listing/${listings._id}`}>
+            <button className='text-green-700 uppercase font-semibold'>Edit</button>
+            </Link>
             </div>
           </div>
         ))}
@@ -282,3 +284,5 @@ export default function Profile() {
   );
 
 }
+
+

@@ -9,6 +9,7 @@ import SignIn from './pages/SignIn'
 import Header from './components/Header'
 import PrivateRoute from './components/PrivateRoute'
 import CreateListing from './pages/CreateListing.jsx'
+import UpdateListing from './pages/UpdateListing.jsx'
 function App() {
   const [count, setCount] = useState(0)
 
@@ -24,7 +25,8 @@ function App() {
         <Route element={<PrivateRoute/>}>
         <Route path='/Profile' element={<Profile/>}/>
         <Route path="/profile/create-listing" element={<CreateListing />} />
-        </Route>
+        <Route path="/update-listing/:listingId" element={<UpdateListing />} />
+       </Route>
         </Routes>
       </BrowserRouter>
     </>
