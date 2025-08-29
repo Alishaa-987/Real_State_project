@@ -33,8 +33,9 @@ export default function UpdateListing() {
   useEffect(() => {
     const fetchListing = async () => {
       try {
-        const res = await fetch(`/api/listing/${params.listingId}`);
-        const data = await res.json();
+        const res = await fetch(`/api/listing/get/${params.listingId}`);
+        
+const data = await res.json();
         setFormData(data);
       } catch (err) {
         console.error(err);
