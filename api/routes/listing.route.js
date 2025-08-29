@@ -8,5 +8,5 @@ router.get('/', getAllListings);
 router.post('/create' ,verifyToken, createListing);
 router.delete("/delete/:id" , verifyToken , deleteListing);
 router.put('/update/:id' , verifyToken , updateListing);
-router.get('/:id' , getListing)
+router.get('/get/:id' , getListing)
 export default router;
