@@ -1,12 +1,10 @@
-import React from 'react'
-import { useState , useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import {useState , useEffect} from 'react'
+import ListingItem from '../components/ListingItem';
 
 export default function Search() {
-    const [loading , setLoading] = useState(false);
-    const [listing , setListing] = useState([]);
-    console.log(listing);
+    const [loading, setLoading] = useState(false);
+    const [listings, setListings] = useState([]);
     const navigate = useNavigate();
     const [sidebardata, setSidebarData] = useState({
         searchTerm: '',
@@ -42,13 +40,19 @@ export default function Search() {
             });
         }
 
-        const fetchListing = async()=>{
+        const fetchListing = async () => {
             setLoading(true);
             const searchQuery = urlParams.toString();
-            const res = await fetch(`/api/listings/get?${searchQuery}`);
-            const data = await res.json();
-            setListing(data);
-            setLoading(false);
+            try {
+                const res = await fetch(`/api/listing/get?${searchQuery}`);
+                const data = await res.json();
+                setListings(data);
+            } catch (error) {
+                console.error("Error fetching listings:", error);
+                setListings([]);
+            } finally {
+                setLoading(false);
+            }
 
         }
 
@@ -58,22 +62,22 @@ export default function Search() {
     console.log(sidebardata);
 
     const handleChange = (e) => {
-        if(e.target.id === 'all' || e.target.id === 'rent' || e.target.id === 'sale'){
-            setSidebarData({...sidebardata, type: e.target.id});
+        if (e.target.id === 'all' || e.target.id === 'rent' || e.target.id === 'sale') {
+            setSidebarData({ ...sidebardata, type: e.target.id });
         }
-        if(e.target.id === 'searchTerm'){
-            setSidebarData({...sidebardata, searchTerm: e.target.value});
-        }
-
-        if(e.target.id === 'parking' || e.target.id === 'furnished' || e.target.id === 'offer'){
-            setSidebarData({...sidebardata, [e.target.id]: e.target.checked || e.target.checked === 'true' ? true : false})
+        if (e.target.id === 'searchTerm') {
+            setSidebarData({ ...sidebardata, searchTerm: e.target.value });
         }
 
+        if (e.target.id === 'parking' || e.target.id === 'furnished' || e.target.id === 'offer') {
+            setSidebarData({ ...sidebardata, [e.target.id]: e.target.checked || e.target.checked === 'true' ? true : false })
+        }
 
-        if (e.target.id === 'sort_order'){
+
+        if (e.target.id === 'sort_order') {
             const sort = e.target.value.split('_')[0] || 'created_at';
             const order = e.target.value.split('_')[1] || 'desc';
-            setSidebarData({...sidebardata, sort, order});
+            setSidebarData({ ...sidebardata, sort, order });
         }
     };
 
@@ -116,28 +120,37 @@ export default function Search() {
                         </label>
                         <div className="flex flex-wrap gap-4">
                             <label className="flex items-center gap-2">
-                                <input type="checkbox" className="w-5 h-5 text-indigo-600 rounded"
+                                <input
+                                    type="checkbox"
+                                    id='all'
+                                    className="w-5 h-5 text-indigo-600 rounded"
                                     onChange={handleChange}
                                     checked={sidebardata.type === 'all'}
                                 />
                                 <span>Rent & Sale</span>
                             </label>
                             <label className="flex items-center gap-2">
-                                <input type="checkbox" className="w-5 h-5 text-indigo-600 rounded"
+                                <input type="checkbox"
+                                    id='rent'
+                                    className="w-5 h-5 text-indigo-600 rounded"
                                     onChange={handleChange}
                                     checked={sidebardata.type === 'rent'}
                                 />
                                 <span>Rent</span>
                             </label>
                             <label className="flex items-center gap-2">
-                                <input type="checkbox" className="w-5 h-5 text-indigo-600 rounded"
+                                <input type="checkbox"
+                                    id='sale'
+                                    className="w-5 h-5 text-indigo-600 rounded"
                                     onChange={handleChange}
                                     checked={sidebardata.type === 'sale'}
                                 />
                                 <span>Sale</span>
                             </label>
                             <label className="flex items-center gap-2">
-                                <input type="checkbox" className="w-5 h-5 text-indigo-600 rounded"
+                                <input type="checkbox"
+                                    id='offer'
+                                    className="w-5 h-5 text-indigo-600 rounded"
                                     onChange={handleChange}
                                     checked={sidebardata.offer}
                                 />
@@ -153,14 +166,19 @@ export default function Search() {
                         </label>
                         <div className="flex flex-wrap gap-4">
                             <label className="flex items-center gap-2">
-                                <input type="checkbox" className="w-5 h-5 text-indigo-600 rounded"
+                                <input type="checkbox"
+                                    id='parking'
+                                    className="w-5 h-5 text-indigo-600 rounded"
                                     onChange={handleChange}
                                     checked={sidebardata.parking}
                                 />
                                 <span>Parking</span>
                             </label>
                             <label className="flex items-center gap-2">
-                                <input type="checkbox" className="w-5 h-5 text-indigo-600 rounded"
+                                <input
+                                    type="checkbox"
+                                    id='furnished'
+                                    className="w-5 h-5 text-indigo-600 rounded"
                                     onChange={handleChange}
                                     checked={sidebardata.furnished}
                                 />
@@ -179,7 +197,7 @@ export default function Search() {
                             defaultValue={'created_at_desc'}
                             id='sort-data'
 
-                                className="border rounded-lg p-3 w-full focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            className="border rounded-lg p-3 w-full focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                             <option value='regularPrice_desc'>Price high to low</option>
                             <option value='regularPrice_asc'>Price low to high</option>
                             <option value='createdAt_desc'>Latest</option>
@@ -200,6 +218,22 @@ export default function Search() {
                     Listing Results:
                 </h1>
                 {/* Khali rakha gaya */}
+                <div className='p-7 flex flex-wrap gap-4'>
+                    {!loading && listings.length === 0 && (
+                        <p className='text-xl text-slate-700 text-center'>No listing Found</p>
+                    )}
+                    {
+                        loading && (
+                            <p className='text-xl text-slate-700 text-center w-full'>Loading...</p>
+                        )
+                    }
+
+                    {
+                        !loading &&
+                        listings &&
+                        listings.map((listing) => <ListingItem key={listing._id} listing={listing} />)
+                    }
+                </div>
             </div>
         </div>
     );
