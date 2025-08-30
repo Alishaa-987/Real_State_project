@@ -6,6 +6,7 @@ import Profile from './pages/Profile'
 import SignUp from './pages/SignUp'
 import About from './pages/About'
 import SignIn from './pages/SignIn'
+import Search from './pages/Search.jsx'
 import Listing from './pages/Listing.jsx'
 import Header from './components/Header'
 import PrivateRoute from './components/PrivateRoute'
@@ -22,6 +23,7 @@ function App() {
         <Route path='/' element={<Home/>}/>
         <Route path='/About' element={<About/>}/>
         <Route path='/listing/:listingId' element={<Listing/>}/>
+        <Route path='/search' element={<Search />} />
         <Route path='/SignIn' element={<SignIn/>}/>
         <Route path='/SignUp' element={<SignUp/>}/>
         <Route element={<PrivateRoute/>}>
