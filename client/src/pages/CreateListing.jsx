@@ -156,8 +156,9 @@ const handleChange = (e) => {
   };
 
   return (
-    <main className="p-6 max-w-4xl mx-auto bg-white shadow-md rounded-lg">
-      <h1 className="text-3xl font-semibold text-center mb-6 text-slate-700">
+    <main className="p-6 max-w-4xl mx-auto bg-white shadow-md rounded-lg font-sans">
+  <h1 className="text-3xl font-serif font-semibold text-center mb-6 text-slate-700">
+
         Create a Listing
       </h1>
       <form

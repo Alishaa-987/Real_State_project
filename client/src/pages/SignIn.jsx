@@ -1,87 +1,85 @@
-import React from 'react'
-import { Link , useNavigate} from 'react-router-dom';
-import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { signInStart , signInFailure , signInSuccess} from '../redux/user/userSlice';
-import OAth from '../components/OAth';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { signInStart, signInFailure, signInSuccess } from "../redux/user/userSlice";
+import OAth from "../components/OAth";
 
 export default function SignIn() {
   const [formData, setFormData] = useState({});
-const {loading , error } = useSelector((state)=> state.user);
+  const { loading, error } = useSelector((state) => state.user);
   const navigate = useNavigate();
-  const dispatch = useDispatch();  // 👈 ye missing tha
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
-    // form data is used to store whatever the user type
     setFormData({
-      ...formData,   // keep previous values store
-      [e.target.id]: e.target.value,  // update current input
+      ...formData,
+      [e.target.id]: e.target.value,
     });
-
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       dispatch(signInStart());
 
-      const res = await fetch('http://localhost:3000/api/auth/signIn',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+      const res = await fetch("http://localhost:3000/api/auth/signIn", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
       const data = await res.json();
-      console.log(data);
 
       if (data.success === false) {
-     dispatch(signInFailure(data.message));
+        dispatch(signInFailure(data.message));
         return;
       }
       dispatch(signInSuccess(data));
-      navigate('/')
-    } catch(err) {
-     dispatch(signInFailure(err.message));
+      navigate("/");
+    } catch (err) {
+      dispatch(signInFailure(err.message));
     }
-
   };
 
-
-
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md border border-gray-100">
-
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-100 to-slate-200 px-4">
+      <div className="bg-white/90 backdrop-blur-md shadow-2xl rounded-3xl p-10 w-full max-w-md border border-slate-200">
         {/* Heading */}
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
-          Sign In
+        <h2 className="text-3xl font-serif font-bold text-center text-slate-800 mb-6">
+          Welcome Back
         </h2>
+        {/* <p className="text-center text-slate-500 mb-8 text-sm">
+          Sign in to access your personalized dashboard and explore luxury listings.
+        </p> */}
 
         {/* Form */}
-        <form className="space-y-5" onSubmit={handleSubmit}>
+        <form className="space-y-6" onSubmit={handleSubmit}>
           {/* Email */}
           <div>
-            <label className="block text-gray-700 text-sm font-medium mb-1" >Email</label>
+            <label className="block text-slate-700 text-sm font-medium mb-1">Email</label>
             <input
               id="email"
               type="email"
               placeholder="Enter your email"
-              className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" onChange={handleChange}
+              className="w-full px-4 py-3 border border-slate-300 rounded-2xl 
+                         focus:ring-2 focus:ring-slate-600 focus:border-slate-600 
+                         transition shadow-sm"
+              onChange={handleChange}
             />
           </div>
 
           {/* Password */}
           <div>
-            <label className="block text-gray-700 text-sm font-medium mb-1">Password</label>
+            <label className="block text-slate-700 text-sm font-medium mb-1">Password</label>
             <input
               id="password"
               type="password"
               placeholder="Enter your password"
-              className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" onChange={handleChange}
+              className="w-full px-4 py-3 border border-slate-300 rounded-2xl 
+                         focus:ring-2 focus:ring-slate-600 focus:border-slate-600 
+                         transition shadow-sm"
+              onChange={handleChange}
             />
           </div>
 
@@ -89,27 +87,36 @@ const {loading , error } = useSelector((state)=> state.user);
           <button
             disabled={loading}
             type="submit"
-            className="w-full py-2 rounded-xl font-semibold text-white shadow-md 
-             bg-gradient-to-r from-indigo-500 to-blue-700 
-             hover:from-indigo-700 hover:to-blue-800 
-             transition duration-200"
+            className="w-full py-3 rounded-2xl font-semibold text-white shadow-lg 
+                       bg-gradient-to-r from-slate-800 to-slate-600 
+                       hover:from-slate-900 hover:to-slate-700 
+                       transition duration-300"
           >
-            {/* Sign Up */}
-            {loading ? 'Loading...' : 'Sign In'}
+            {loading ? "Loading..." : "Sign In"}
           </button>
-          <OAth/>
+
+          {/* OAuth */}
+          <OAth />
         </form>
 
         {/* Link */}
-        <p className="text-center text-sm text-gray-600 mt-6">
-          Don't have an account?{" "}
-          <a href="/signUp" className="text-indigo-500 font-medium hover:underline">
+        <p className="text-center text-sm text-slate-600 mt-6">
+          Don’t have an account?{" "}
+          <Link
+            to="/signUp"
+            className="text-slate-800 font-medium hover:underline"
+          >
             Sign Up
-          </a>
+          </Link>
         </p>
+
+        {/* Error */}
+        {error && (
+          <p className="text-center text-red-500 mt-4 text-sm font-medium">
+            {error}
+          </p>
+        )}
       </div>
-      {error && <p className='text-red-500'>{error}</p>}
     </div>
   );
 }
-

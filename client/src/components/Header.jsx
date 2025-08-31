@@ -1,97 +1,104 @@
-
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
 function Header() {
   const [searchTerm, setSearchTerm] = useState("");
   const currentUser = useSelector((state) => state.user.currentUser);
   const [showProfile, setShowProfile] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    if (currentUser) {
-      setShowProfile(true);
-    }
+    if (currentUser) setShowProfile(true);
   }, [currentUser]);
 
-  const handelSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const urlParams = new URLSearchParams(window.location.search);
-    urlParams.set('searchTerm', searchTerm);
-    const searchQuery = urlParams.toString();
-    navigate(`/search?${searchQuery}`);
+    const urlParams = new URLSearchParams();
+    urlParams.set("searchTerm", searchTerm);
+    navigate(`/search?${urlParams.toString()}`);
   };
 
-
-  useEffect(()=>{
+  useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
-    const searchTermFormUrl = urlParams.get('searchTerm') ;
-    if (searchTermFormUrl) {
-      setSearchTerm(searchTermFormUrl);
-    }
-
+    const searchTermFromUrl = urlParams.get("searchTerm");
+    if (searchTermFromUrl) setSearchTerm(searchTermFromUrl);
   }, [location.search]);
 
-  // JSX return MUST be inside the function
   return (
-    <header className="bg-white/90 backdrop-blur-md shadow-md sticky top-0 z-50">
-      <div className="flex justify-between items-center max-w-7xl mx-auto px-5 py-4">
+    <header className="bg-white/70 backdrop-blur-xl shadow-md sticky top-0 z-50 border-b border-slate-200">
+      <div className="flex justify-between items-center max-w-7xl mx-auto px-4 sm:px-8 py-4">
         {/* Logo */}
-        <h1 className="font-medium text-xl sm:text-3xl tracking-tight flex flex-wrap">
-          <span className="text-indigo-600">Real </span>
-          <span className="text-slate-900">Estate</span>
-        </h1>
+        <Link to="/">
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight flex items-center hover:scale-105 transition-transform duration-300">
+            <span className="text-slate-800">Sahand</span>
+            <span className="ml-1 text-slate-500">Estate</span>
+          </h1>
+        </Link>
 
         {/* Search */}
-        <form  onSubmit={handelSubmit} className="bg-slate-50 px-4 py-2 rounded-full flex items-center border border-slate-200 shadow-sm focus-within:ring-2 focus-within:ring-indigo-400 transition">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-gradient-to-r from-slate-100 to-slate-200 px-3 sm:px-5 py-2 rounded-full flex items-center shadow-md border border-slate-300 focus-within:ring-2 focus-within:ring-slate-500 transition w-28 sm:w-72 hover:shadow-lg"
+        >
           <input
             type="text"
             placeholder="Search..."
-            className="bg-transparent focus:outline-none w-28 sm:w-64 text-slate-700 placeholder-slate-400 text-sm sm:text-base"
+            className="bg-transparent focus:outline-none flex-1 text-slate-700 placeholder-slate-400 text-xs sm:text-base font-medium"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <button>
-            <FaSearch className="ml-2 text-slate-500 hover:text-indigo-600 transition-colors duration-200 cursor-pointer" />
-
+          <button type="submit">
+            <FaSearch className="hidden sm:inline ml-1 sm:ml-2 text-slate-600 hover:text-slate-900 transition-colors duration-200 cursor-pointer text-base sm:text-xl" />
           </button>
         </form>
 
         {/* Navigation */}
-        <ul className="flex gap-6 text-sm sm:text-base font-medium items-center">
-          <Link to="/">
-            <li className="hidden sm:inline text-slate-700 hover:text-indigo-600 transition-colors duration-200">
+        <ul className="flex items-center gap-3 sm:gap-4 text-xs sm:text-base font-medium">
+          {/* Home & About only visible on sm+ screens */}
+          <li className="hidden sm:flex hidden:md-flex">
+            <Link
+              to="/"
+              className="text-slate-700 hover:text-slate-900 text-base sm:text-lg transition-colors duration-200 font-semibold"
+            >
               Home
-            </li>
-          </Link>
-          <Link to="/about">
-            <li className="hidden sm:inline text-slate-700 hover:text-indigo-600 transition-colors duration-200">
+            </Link>
+          </li>
+
+          {/* About visible only sm+ */}
+          <li className="hidden sm:flex">
+            <Link
+              to="/about"
+              className="text-slate-700 hover:text-slate-900 text-base sm:text-lg transition-colors duration-200 font-semibold"
+            >
               About
-            </li>
-          </Link>
-          <Link to="/profile">
+            </Link>
+          </li>
+          {/* SignIn / Profile Avatar */}
+          <li>
             {currentUser && showProfile ? (
-              <li>
+              <Link to="/profile">
                 <img
                   src={currentUser.avatar || currentUser.photoURL}
-                  className="w-10 h-10 rounded-full object-cover ring-2 ring-indigo-500 hover:scale-105 transition-transform duration-200"
+                  className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover ring-2 ring-slate-500 shadow-md hover:shadow-xl hover:scale-110 transition-all duration-300 border-2 border-white"
                   alt="profile"
                 />
-              </li>
+              </Link>
             ) : (
-              <li className="text-slate-700 hover:text-indigo-600 transition-colors duration-200">
+              <Link
+                to="/signin"
+                className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-slate-800 text-white hover:bg-slate-900 transition-colors duration-300 shadow-md text-xs sm:text-base"
+              >
                 Sign In
-              </li>
+              </Link>
             )}
-          </Link>
+          </li>
         </ul>
       </div>
     </header>
   );
-
 }
 
 export default Header;

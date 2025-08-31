@@ -1,102 +1,111 @@
-import React from 'react'
-import { Link , useNavigate} from 'react-router-dom';
-import { useState } from 'react';
-import OAth from '../components/OAth';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import OAth from "../components/OAth";
 
 export default function SignUp() {
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
   const handleChange = (e) => {
-    // form data is used to store whatever the user type
     setFormData({
-      ...formData,   // keep previous values store
-      [e.target.id]: e.target.value,  // update current input
+      ...formData,
+      [e.target.id]: e.target.value,
     });
-
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       setLoading(true);
 
+      const res = await fetch("http://localhost:3000/api/auth/signUp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-      const res = await fetch('http://localhost:3000/api/auth/signUp',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
-        }
-      );
       const data = await res.json();
-      console.log(data);
 
       if (data.success === false) {
         setLoading(false);
         setError(data.message);
-
         return;
       }
-  setLoading(false);
-  setError(null);
-  // Set a flag in localStorage to indicate recent sign up
-  localStorage.setItem('justSignedUp', 'true');
-  navigate('/')
-    } catch(err) {
+
+      setLoading(false);
+      setError(null);
+
+      // Flag to detect fresh signup
+      localStorage.setItem("justSignedUp", "true");
+      navigate("/");
+    } catch (err) {
       setLoading(false);
       setError(err.message);
     }
-
   };
 
-
-
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md border border-gray-100">
-
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-100 to-slate-200 px-4">
+      <div className="bg-white/90 backdrop-blur-md shadow-2xl rounded-3xl p-10 w-full max-w-md border border-slate-200">
         {/* Heading */}
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
-          Sign Up
+        <h2 className="text-3xl font-serif font-bold text-center text-slate-800 mb-6">
+          Create Account
         </h2>
+        {/* <p className="text-center text-slate-500 mb-8 text-sm">
+          Join our community and start exploring premium real estate listings.
+        </p> */}
 
         {/* Form */}
-        <form className="space-y-5" onSubmit={handleSubmit}>
+        <form className="space-y-6" onSubmit={handleSubmit}>
           {/* Username */}
           <div>
-            <label className="block text-gray-700 text-sm font-medium mb-1"  >Username</label>
+            <label className="block text-slate-700 text-sm font-medium mb-1">
+              Username
+            </label>
             <input
               id="username"
               type="text"
               placeholder="Enter your username"
-              className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" onChange={handleChange}
+              className="w-full px-4 py-3 border border-slate-300 rounded-2xl 
+                         focus:ring-2 focus:ring-slate-600 focus:border-slate-600 
+                         transition shadow-sm"
+              onChange={handleChange}
             />
           </div>
 
           {/* Email */}
           <div>
-            <label className="block text-gray-700 text-sm font-medium mb-1" >Email</label>
+            <label className="block text-slate-700 text-sm font-medium mb-1">
+              Email
+            </label>
             <input
               id="email"
               type="email"
               placeholder="Enter your email"
-              className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" onChange={handleChange}
+              className="w-full px-4 py-3 border border-slate-300 rounded-2xl 
+                         focus:ring-2 focus:ring-slate-600 focus:border-slate-600 
+                         transition shadow-sm"
+              onChange={handleChange}
             />
           </div>
 
           {/* Password */}
           <div>
-            <label className="block text-gray-700 text-sm font-medium mb-1">Password</label>
+            <label className="block text-slate-700 text-sm font-medium mb-1">
+              Password
+            </label>
             <input
               id="password"
               type="password"
               placeholder="Enter your password"
-              className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" onChange={handleChange}
+              className="w-full px-4 py-3 border border-slate-300 rounded-2xl 
+                         focus:ring-2 focus:ring-slate-600 focus:border-slate-600 
+                         transition shadow-sm"
+              onChange={handleChange}
             />
           </div>
 
@@ -104,29 +113,36 @@ export default function SignUp() {
           <button
             disabled={loading}
             type="submit"
-            className="w-full py-2 rounded-xl font-semibold text-white shadow-md 
-             bg-gradient-to-r from-indigo-500 to-blue-700 
-             hover:from-indigo-700 hover:to-blue-800 
-             transition duration-200"
+            className="w-full py-3 rounded-2xl font-semibold text-white shadow-lg 
+                       bg-gradient-to-r from-slate-800 to-slate-600 
+                       hover:from-slate-900 hover:to-slate-700 
+                       transition duration-300"
           >
-            
-
-            {/* Sign Up */}
-            {loading ? 'Loading...' : 'Sign Up'}
+            {loading ? "Loading..." : "Sign Up"}
           </button>
-          <OAth/>
+
+          {/* OAuth */}
+          <OAth />
         </form>
 
         {/* Link */}
-        <p className="text-center text-sm text-gray-600 mt-6">
+        <p className="text-center text-sm text-slate-600 mt-6">
           Already have an account?{" "}
-          <a href="/signin" className="text-indigo-500 font-medium hover:underline">
-            Click here
-          </a>
+          <Link
+            to="/signin"
+            className="text-slate-800 font-medium hover:underline"
+          >
+            Sign In
+          </Link>
         </p>
+
+        {/* Error */}
+        {error && (
+          <p className="text-center text-red-500 mt-4 text-sm font-medium">
+            {error}
+          </p>
+        )}
       </div>
-      {error && <p className='text-red-500'>{error}</p>}
     </div>
   );
 }
-

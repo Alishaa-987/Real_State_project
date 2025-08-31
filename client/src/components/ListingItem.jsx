@@ -3,39 +3,60 @@ import { MdLocationOn } from "react-icons/md";
 
 function ListingItem({ listing }) {
   return (
-    <div className="bg-white shadow-md hover:shadow-lg w-full sm:w-[330px]">
+    <div className="bg-white shadow-md hover:shadow-xl rounded-2xl overflow-hidden w-full sm:w-[340px] transition-all duration-300 border border-gray-100">
       <Link to={`/listing/${listing._id}`}>
-        <img
-          src={listing.imageUrls[0]  || "https://wallpapercave.com/wp/wp7774249.jpg"}
-          alt="Listing Image"
-          className="h-[320px] sm:h-[220px] w-full object-cover hover:scale-105 transition-scale duration-300"
-        />
-        <div className="p-3 flex flex-col gap-2 w-full">
-          <p className="text-lg font-semibold truncate text-slate-700">
+        {/* Image */}
+        <div className="overflow-hidden">
+          <img
+            src={
+              listing.imageUrls[0] ||
+              "https://wallpapercave.com/wp/wp7774249.jpg"
+            }
+            alt="Listing Image"
+            className="h-[260px] w-full object-cover hover:scale-110 transition-transform duration-500"
+          />
+        </div>
+
+        {/* Content */}
+        <div className="p-4 flex flex-col gap-3">
+          {/* Title */}
+          <p className="text-lg font-semibold truncate text-gray-800">
             {listing.title}
           </p>
-          <div className="flex items-center gap-1">
-            <MdLocationOn className="h-4 w-4 text-green-700 " />
-            <p className="text-sm text-gray-600 truncate w-full">
-              {listing.address}
-            </p>
+
+          {/* Address */}
+          <div className="flex items-center gap-1 text-gray-600">
+            <MdLocationOn className="h-5 w-5 text-blue-600" />
+            <p className="text-sm truncate">{listing.address}</p>
           </div>
-          <div>
-            <p className="text-sm text-gray-600 line-clamp-2">{listing.description}</p>
-          <p className="text-slate-500 mt-2 font-semibold flex item-center ">
-            ${listing.offer ? listing.discountPrice.toLocaleString('en-US') 
-            : listing.regularPrice.toLocaleString('en-US')}
-            {listing.type === 'rent'  && '/month'}
+
+          {/* Description */}
+          <p className="text-sm text-gray-500 line-clamp-2">
+            {listing.description}
           </p>
-          <div className="text-slate-700 flex gap-4">
-            <div className="font-bold text-x5">
-              {listing.bedrooms > 1 ? `${listing.bedrooms} Beds` : `${listing.bedrooms} bed`}
-            </div>
-            <div className="font-bold text-x5">
-              {listing.bathrooms > 1 ? `${listing.bathrooms} Baths` : `${listing.bathrooms} bath`}
-            </div>
+
+          {/* Price */}
+          <p className="text-blue-600 mt-2 font-bold text-base">
+            $
+            {listing.offer
+              ? listing.discountPrice.toLocaleString("en-US")
+              : listing.regularPrice.toLocaleString("en-US")}
+            {listing.type === "rent" && " /month"}
+          </p>
+
+          {/* Beds & Baths */}
+          <div className="text-gray-700 flex gap-6 mt-2 text-sm font-semibold">
+            <span>
+              {listing.bedroom > 1
+                ? `${listing.bedroom} Beds`
+                : `${listing.bedroom} Bed`}
+            </span>
+            <span>
+              {listing.bathroom > 1
+                ? `${listing.bathroom} Baths`
+                : `${listing.bathroom} Bath`}
+            </span>
           </div>
-        </div>
         </div>
       </Link>
     </div>

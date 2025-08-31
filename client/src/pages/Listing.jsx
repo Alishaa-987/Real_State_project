@@ -1,10 +1,11 @@
-import { useParams } from 'react-router-dom';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import SwiperCore from 'swiper';
-import { useSelector } from 'react-redux';
-import { Navigation } from 'swiper/modules';
-import { useState, useEffect } from 'react';
-import 'swiper/css/bundle';
+import { useParams } from "react-router-dom";
+import { Swiper, SwiperSlide } from "swiper/react";
+import SwiperCore from "swiper";
+import { useSelector } from "react-redux";
+import { Navigation } from "swiper/modules";
+import { useState, useEffect } from "react";
+import "swiper/css/bundle";
+import "../App.css";
 import {
   FaBath,
   FaBed,
@@ -12,20 +13,19 @@ import {
   FaMapMarkerAlt,
   FaParking,
   FaShare,
-} from 'react-icons/fa';
-import Contact from '../components/Contact';
+} from "react-icons/fa";
+import Contact from "../components/Contact";
+SwiperCore.use([Navigation]);
 
 export default function Listing() {
-  SwiperCore.use([Navigation]);
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [copied, setCopied] = useState(false);
   const [contact, setContact] = useState(false);
   const params = useParams();
-  const { currentUser} = useSelector((state) => state.user);
+  const { currentUser } = useSelector((state) => state.user);
 
-    console.log('currentUser._id:', currentUser?._id, 'listing.userRef:', listing?.userRef);
   useEffect(() => {
     const fetchListing = async () => {
       try {
@@ -64,13 +64,16 @@ export default function Listing() {
       {listing && !loading && !error && (
         <div className="max-w-6xl mx-auto py-8 px-4">
           {/* Swiper / Image gallery */}
-          <Swiper navigation className="rounded-xl shadow-lg overflow-hidden mb-8">
+          <Swiper
+            navigation
+            className="rounded-2xl shadow-xl overflow-hidden mb-10"
+          >
             {listing.imageUrls.map((url) => (
               <SwiperSlide key={url}>
                 <img
                   src={url}
                   alt="listing"
-                  className="w-full h-[550px] object-cover rounded-xl"
+                  className="w-full h-[550px] object-cover rounded-2xl"
                 />
               </SwiperSlide>
             ))}
@@ -79,7 +82,7 @@ export default function Listing() {
           {/* Share button */}
           <div className="fixed top-[13%] right-[3%] z-10 border rounded-full w-12 h-12 flex justify-center items-center bg-white shadow-md cursor-pointer hover:scale-110 transition">
             <FaShare
-              className="text-slate-500"
+              className="text-slate-600"
               onClick={() => {
                 navigator.clipboard.writeText(window.location.href);
                 setCopied(true);
@@ -90,92 +93,81 @@ export default function Listing() {
             />
           </div>
           {copied && (
-            <p className="fixed top-[23%] right-[5%] z-10 rounded-md bg-white shadow-md p-2">
+            <p className="fixed top-[23%] right-[5%] z-10 rounded-lg bg-white shadow-lg px-3 py-1 text-sm text-gray-700">
               Link copied!
             </p>
           )}
 
           {/* Listing details */}
-          <div className="bg-white rounded-2xl shadow-lg p-6 flex flex-col gap-4">
-            <p className="text-2xl font-bold text-gray-800">
-              {listing.name} - ${' '}
-              {/* {listing.offer
-                ? listing.discountPrice.toLocaleString('en-US')
-                : listing.regularPrice.toLocaleString('en-US')} */}
+          <div className="bg-white rounded-2xl shadow-lg p-8 flex flex-col gap-5">
+            {/* Title & Price */}
+            <h1 className="text-3xl font-bold text-gray-900">{listing.name}</h1>
+            <p className="text-xl font-semibold text-indigo-600">
               {listing.offer
-                ? (listing.regularPrice - listing.discountPrice).toLocaleString('en-US')
-                : listing.regularPrice.toLocaleString('en-US')}
-
-              {listing.type === 'rent' && ' / month'}
-
-              {/* {listing.offer ? (
-                <>
-                  <span className="text-red-600">${listing.discountPrice.toLocaleString('en-US')}</span>
-                  <span className="line-through text-gray-500 ml-2">${listing.regularPrice.toLocaleString('en-US')}</span>
-                </>
-              ) : (
-                <span>${listing.regularPrice.toLocaleString('en-US')}</span>
-              )} */}
-
-              {/* {listing.offer && (
-            <span>${listing.regularPrice - listing.discountPrice} OFF</span>
-              )} */}
+                ? (listing.regularPrice - listing.discountPrice).toLocaleString(
+                    "en-US"
+                  )
+                : listing.regularPrice.toLocaleString("en-US")}
+              {listing.type === "rent" && " / month"}
             </p>
 
+            {/* Address */}
             <p className="flex items-center mt-2 gap-2 text-slate-600 text-sm">
               <FaMapMarkerAlt className="text-green-700" />
               {listing.address}
             </p>
 
             {/* Badges */}
-            <div className="flex gap-4 mt-2 flex-wrap">
-              <p className="bg-red-600 text-white px-4 py-1 rounded-full shadow-sm">
-                {listing.type === 'rent' ? 'For Rent' : 'For Sale'}
-              </p>
+            <div className="flex gap-3 mt-3 flex-wrap">
+              <span className="bg-indigo-600 text-white px-4 py-1 rounded-full text-sm shadow-md">
+                {listing.type === "rent" ? "For Rent" : "For Sale"}
+              </span>
               {listing.offer && (
-                <p className="bg-green-600 text-white px-4 py-1 rounded-full shadow-sm">
+                <span className="bg-green-600 text-white px-4 py-1 rounded-full text-sm shadow-md">
                   ${+listing.discountPrice} OFF
-                </p>
+                </span>
               )}
-
             </div>
+
             {/* Description */}
-            <p className="text-gray-700 mt-4">
-              <span className="font-semibold text-gray-900">Description - </span>
+            <p className="text-gray-700 mt-4 leading-relaxed">
+              <span className="font-semibold text-gray-900">
+                Description -{" "}
+              </span>
               {listing.description}
             </p>
 
             {/* Features */}
-            <ul className="flex flex-wrap items-center gap-4 sm:gap-6 text-green-900 font-semibold text-sm mt-3">
-              <li className="flex items-center gap-1 whitespace-nowrap">
-                <FaBed className="text-lg" />
+            <ul className="flex flex-wrap items-center gap-5 sm:gap-8 text-gray-800 font-medium text-sm mt-5">
+              <li className="flex items-center gap-2">
+                <FaBed className="text-lg text-indigo-600" />
                 {listing.bedroom > 1
                   ? `${listing.bedroom} beds`
                   : `${listing.bedroom} bed`}
               </li>
-              <li className="flex items-center gap-1 whitespace-nowrap">
-                <FaBath className="text-lg" />
+              <li className="flex items-center gap-2">
+                <FaBath className="text-lg text-indigo-600" />
                 {listing.bathroom > 1
                   ? `${listing.bathroom} baths`
                   : `${listing.bathroom} bath`}
               </li>
-              <li className="flex items-center gap-1 whitespace-nowrap">
-                <FaParking className="text-lg" />
-                {listing.parking ? 'Parking spot' : 'No Parking'}
+              <li className="flex items-center gap-2">
+                <FaParking className="text-lg text-indigo-600" />
+                {listing.parking ? "Parking spot" : "No Parking"}
               </li>
-              <li className="flex items-center gap-1 whitespace-nowrap">
-                <FaChair className="text-lg" />
-                {listing.furnished ? 'Furnished' : 'Unfurnished'}
+              <li className="flex items-center gap-2">
+                <FaChair className="text-lg text-indigo-600" />
+                {listing.furnished ? "Furnished" : "Unfurnished"}
               </li>
             </ul>
 
-
+            {/* Contact */}
             {currentUser && !contact && (
               <button
                 onClick={() => setContact(true)}
-                className="bg-gradient-to-r from-indigo-600 to-blue-500 text-white rounded-lg uppercase hover:opacity-95 p-3 mt-4 transition"
+                className="bg-slate-700 text-white rounded-xl uppercase hover:opacity-95 p-3 mt-6 font-semibold shadow-md transition"
               >
-                Contact landlord
+                Contact Landlord
               </button>
             )}
             {contact && <Contact listing={listing} />}
