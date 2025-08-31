@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
+import { Navigation , Pagination } from "swiper/modules";
 import SwiperCore from "swiper";
 import "swiper/css/bundle";
 import ListingItem from "../components/ListingItem";
+import "swiper/css/pagination";
+
 import '../App.css'
 SwiperCore.use([Navigation]);
 
@@ -79,34 +81,26 @@ export default function Home() {
 
       {/* Swiper Section */}
       <div className="max-w-7xl mx-auto mt-24">
-        <Swiper
-          navigation
-          loop  // loop sirf tab chalega jab 1 se zyada slides hain
-          spaceBetween={30}
-          slidesPerView={1}
-          className="rounded-3xl shadow-2xl border"
-        >
-          {offerListings.map((listing) => (
-            <SwiperSlide key={listing._id}>
-              <div className="relative w-full aspect-[16/7] rounded-3xl overflow-hidden">
-                <img
-                  src={listing.imageUrls[0]}
-                  alt="listing"
-                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent"></div>
-                <div className="absolute bottom-8 left-8 text-white">
-                  <h2 className="text-3xl md:text-4xl font-[Playfair_Display] font-semibold mb-2 drop-shadow-lg">
-                    {listing.title}
-                  </h2>
-                  <p className="text-gray-200 max-w-md text-sm md:text-base">
-                    {listing.address || "A perfect blend of luxury and modern living."}
-                  </p>
-                </div>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+         <Swiper
+      navigation
+      pagination={{ clickable: true }}
+      modules={[Navigation, Pagination]}
+      className="w-full"
+    >
+      {offerListings &&
+        offerListings.length > 0 &&
+        offerListings.map((listing) => (
+          <SwiperSlide key={listing._id}>
+            <div
+              style={{
+                background: `url(${listing.imageUrls[0]}) center no-repeat`,
+                backgroundSize: "cover",
+              }}
+              className="h-[500px] w-full rounded-2xl shadow-lg"
+            ></div>
+          </SwiperSlide>
+        ))}
+    </Swiper>
       </div>
 
       {/* Listings Section */}
@@ -130,7 +124,6 @@ export default function Home() {
                 </Link>
               </div>
 
-              {/* Cards grid wider */}
               {/* Cards grid wider */}
               <div className="grid gap-10 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
                 {listings.map((listing) => (
