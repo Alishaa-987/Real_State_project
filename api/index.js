@@ -8,6 +8,8 @@ import dotenv from 'dotenv';
 import listingRouter from './routes/listing.route.js';
 import Listing from './models/listing.model.js';  
 import cookieParser from 'cookie-parser';
+import path from 'path';
+import e from 'express';
 
 dotenv.config({ path: './api/.env' }); // path is relative to where you run the script it is compulsory to define becaus i get a lot of error by not defining the path
 
@@ -22,12 +24,17 @@ app.use(cors({
 }));
 
 
-
+const __dirname = path.resolve();
 
 app.use('/api/auth' , authRouter);
 app.use("/api/user" , userRouter);
 app.use("/api/listing" , listingRouter);
 
+
+app.use(express.static(path.join(__dirname, 'client', 'dist')));
+app.get('*', (req, res) => {  
+    res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+}
 
 app.use((err , req , res , next )=>{
     const statusCode = err.statusCode || 500;
