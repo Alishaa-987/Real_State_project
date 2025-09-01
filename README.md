@@ -1,12 +1,27 @@
-# React + Vite
+# Real Estate Project (MERN Stack)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a **Real Estate web application** built with the MERN stack:
+- **MongoDB** for database
+- **Express.js** as backend framework
+- **React (Vite)** for frontend
+- **Node.js** as server runtime
 
-Currently, two official plugins are available:
+## 🚀 Live Demo
+🔗 [View Live Project](https://realstateproject-production.up.railway.app)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 📂 Project Structure
+- `client/` → React frontend (Vite)
+- `api/` → Express backend (Node.js + MongoDB)
 
-## Expanding the ESLint configuration
+## ⚙️ Features
+- User-friendly frontend built with React + Vite
+- REST API backend with Express
+- Database connectivity with MongoDB
+- Railway deployment (backend + frontend in one)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🛠️ Installation (Local Setup)
+
+1. Clone this repo:
+   ```bash
+   git clone https://github.com/Alishaa-987/Real_State_project.git
+
