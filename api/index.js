@@ -1,5 +1,7 @@
 import express from 'express';
 dotenv.config({'path': './api/.env'});
+import cors from "cors";
+
 
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
@@ -21,6 +23,14 @@ mongoose
     console.log(err);
   });
 
+
+  app.use(cors({
+  origin: "https://real-state-project-livid.vercel.app",  // yahan apna Vercel ka domain likho
+  credentials: true
+}));
+
+
+
   const __dirname = path.resolve();
 
 
@@ -30,8 +40,9 @@ app.use(cookieParser());
 
 
 
-app.listen(3000, () => {
-  console.log('Server is running on port 3000!');
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
 
 app.use('/api/user', userRouter);

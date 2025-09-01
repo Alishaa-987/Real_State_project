@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { signInStart, signInFailure, signInSuccess } from "../redux/user/userSlice";
+import {
+  signInStart,
+  signInFailure,
+  signInSuccess,
+} from "../redux/user/userSlice";
 import OAth from "../components/OAth";
 
 export default function SignIn() {
@@ -22,7 +26,7 @@ export default function SignIn() {
     try {
       dispatch(signInStart());
 
-      const res = await fetch("http://localhost:3000/api/auth/signIn", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/signIn`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -57,7 +61,9 @@ export default function SignIn() {
         <form className="space-y-6" onSubmit={handleSubmit}>
           {/* Email */}
           <div>
-            <label className="block text-slate-700 text-sm font-medium mb-1">Email</label>
+            <label className="block text-slate-700 text-sm font-medium mb-1">
+              Email
+            </label>
             <input
               id="email"
               type="email"
@@ -71,7 +77,9 @@ export default function SignIn() {
 
           {/* Password */}
           <div>
-            <label className="block text-slate-700 text-sm font-medium mb-1">Password</label>
+            <label className="block text-slate-700 text-sm font-medium mb-1">
+              Password
+            </label>
             <input
               id="password"
               type="password"
