@@ -13,4 +13,3 @@
 
 
  export default router;
- // All the routers should define under indesex.js so we have to define that like calling function

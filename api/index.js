@@ -1,67 +1,58 @@
 import express from 'express';
+dotenv.config({'path': './api/.env'});
+
 import mongoose from 'mongoose';
-import cors from "cors";
-import bcrypt from 'bcryptjs';
-import authRouter from './routes/auth.route.js'
-import userRouter from './routes/user.route.js'
 import dotenv from 'dotenv';
+import userRouter from './routes/user.route.js';
+import authRouter from './routes/auth.route.js';
 import listingRouter from './routes/listing.route.js';
-import Listing from './models/listing.model.js';  
 import cookieParser from 'cookie-parser';
 import path from 'path';
-import e from 'express';
-
-dotenv.config({ path: './api/.env' }); // path is relative to where you run the script it is compulsory to define becaus i get a lot of error by not defining the path
 
 
 const app = express();
-app.use(cookieParser());
+
+mongoose
+  .connect(process.env.Connection)
+  .then(() => {
+    console.log('Connected to MongoDB!');
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+
+  const __dirname = path.resolve();
+
+
 app.use(express.json());
 
-app.use(cors({
-  origin: "http://localhost:5173",   // frontend ka URL
-  credentials: true
-}));
+app.use(cookieParser());
 
 
-const __dirname = path.resolve();
 
-app.use('/api/auth' , authRouter);
-app.use("/api/user" , userRouter);
-app.use("/api/listing" , listingRouter);
-
-
-app.use(express.static(path.join(__dirname, 'client', 'dist')));
-app.get('*', (req, res) => {  
-    res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+app.listen(3000, () => {
+  console.log('Server is running on port 3000!');
 });
 
-app.use((err , req , res , next )=>{
-    const statusCode = err.statusCode || 500;
-    const message = err.message || 'Internal Server Error';
-    return res.status(statusCode).json({
-        success:false,
-        statusCode,
-        message,
-    });
+app.use('/api/user', userRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/listing', listingRouter);
+
+
+app.use(express.static(path.join(__dirname, '/client/dist')));
+
+
+app.get(/.*/, (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'client', 'dist', 'index.html'));
 });
 
 
-
-mongoose.connect(process.env.Connection, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() =>{
-  console.log(' MongoDB connected')
-  app.listen(3000, () => {
-  console.log('Server is running on port 3000');
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  const message = err.message || 'Internal Server Error';
+  return res.status(statusCode).json({
+    success: false,
+    statusCode,
+    message,
+  });
 });
-})
-.catch(err => console.error(' Connection error:', err));
-
-
-
-
-
-
