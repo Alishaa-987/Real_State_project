@@ -1,13 +1,13 @@
 {
-  "name": "client",
+  "name": "real-estate-project",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "api/index.js",
   "type": "module",
   "scripts": {
     "dev": "nodemon api/index.js",
     "start": "node api/index.js",
-    "build":"npm install && npm install --prefix client && npm run build --prefix client"
+    "build": "npm run build --prefix client"
   },
   "keywords": [],
   "author": "",
@@ -19,10 +19,10 @@
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.17.1",
-    "nodemon": "^3.1.10"
+    "mongoose": "^8.17.1"
   },
   "devDependencies": {
+    "nodemon": "^3.1.10",
     "tailwindcss": "^4.1.12"
   }
 }
