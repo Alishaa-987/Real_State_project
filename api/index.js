@@ -1,10 +1,11 @@
 import express from 'express';
+import dotenv from 'dotenv';
+
 dotenv.config({'path': './api/.env'});
 import cors from "cors";
 
 
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
 import userRouter from './routes/user.route.js';
 import authRouter from './routes/auth.route.js';
 import listingRouter from './routes/listing.route.js';
