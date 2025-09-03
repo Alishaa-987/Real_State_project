@@ -3,11 +3,12 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "scripts": {
+"scripts": {
   "dev": "vite",
-  "start": "node api/index.js",
-  "build": "echo \"no build step\""
-},
+  "build": "vite build",
+  "preview": "vite preview"
+}
+  ,
   "dependencies": {
     "@reduxjs/toolkit": "^2.8.2",
     "@tailwindcss/vite": "^4.1.11",
