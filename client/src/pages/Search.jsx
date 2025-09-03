@@ -120,9 +120,9 @@ export default function Search() {
   };
 
   return (
-<div className="w-full flex flex-col lg:flex-row min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 font-sans">
+<div className="w-full flex flex-row md:flex-row min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 font-sans">
   {/* Sidebar */}
-  <div className="w-full lg:w-1/3 bg-white p-6 lg:p-8 border-b lg:border-b-0 lg:border-r shadow-lg rounded-b-3xl lg:rounded-tr-3xl lg:rounded-br-3xl">
+  <div className="w-md md:w-1/3 bg-white p-6 md:p-8 border-b md:border-b-0 md:border-r shadow-lg rounded-b-3xl md:rounded-tr-3xl md:rounded-br-3xl">
     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
       {/* Search Term */}
       <div>
@@ -200,7 +200,7 @@ export default function Search() {
   </div>
 
 {/* Listings */}
-<div className="w-full lg:w-2/3 p-6 lg:p-8 font-sans"> 
+  <div className="w-sm md:w-2/3 p-6 md:p-8 font-sans"> 
    <h1 className="text-2xl font-serif font-bold text-gray-800 border-b pb-3 mb-6">
       Listing Results
     </h1>

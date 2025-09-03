@@ -45,7 +45,7 @@ function Header() {
           </button>
           <Link to="/" onClick={() => setIsMenuOpen(false)}>
             <h1 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight flex items-center hover:scale-105 transition-transform duration-300">
-              <span className="text-slate-800">Sahand</span>
+              <span className="text-slate-800">Real</span>
               <span className="ml-1 text-slate-500">Estate</span>
             </h1>
           </Link>
@@ -94,7 +94,7 @@ function Header() {
           ) : (
             <Link
               to="/signin"
-              className="px-6 py-2 rounded-full bg-slate-800 text-white hover:bg-slate-900 transition-colors duration-300 shadow-md"
+              className="px-9 py-4 font-serif text-2xl rounded-sm bg-slate-800 text-white hover:bg-slate-900 transition-colors duration-300 shadow-md"
             >
               Sign In
             </Link>
@@ -117,7 +117,7 @@ function Header() {
           ) : (
             <Link
               to="/signin"
-              className="px-5 py-2 rounded-full bg-slate-800 text-white hover:bg-slate-900 transition-colors duration-300 shadow-md text-xs"
+              className="px-10 py-4 font-serif rounded-full bg-slate-800 text-white hover:bg-slate-900 transition-colors duration-300 shadow-md text-xs"
             >
               Sign In
             </Link>

@@ -3,8 +3,6 @@ import dotenv from 'dotenv';
 
 dotenv.config({'path': './api/.env'});
 import cors from "cors";
-
-
 import mongoose from 'mongoose';
 import userRouter from './routes/user.route.js';
 import authRouter from './routes/auth.route.js';
@@ -26,7 +24,7 @@ mongoose
 
 
   app.use(cors({
-  origin: "https://real-state-project-livid.vercel.app",  // yahan apna Vercel ka domain likho
+  origin: "https://real-state-project-livid.vercel.app",  
   credentials: true
 }));
 
