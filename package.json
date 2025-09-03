@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "nodemon api/index.js",
     "start": "node api/index.js",
-    "build": "npm run build --prefix client"
+    "build": "npm run build"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.10",
-    "tailwindcss": "^4.1.12"
+    "tailwindcss": "^4.1.12",
+     "vite": "^4.0.0"
   }
 }
