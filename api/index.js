@@ -24,9 +24,9 @@ mongoose
 
 
   app.use(cors({
-  origin: "https://real-state-project-livid.vercel.app",  
-  credentials: true
-}));
+    origin: process.env.CLIENT_URL,
+    credentials: true
+  }));
 
 
 
