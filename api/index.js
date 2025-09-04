@@ -23,9 +23,18 @@ mongoose
   });
 
 
+  const allowedOrigins = (process.env.ALLOWED_ORIGINS || process.env.CLIENT_URL || '')
+    .split(',')
+    .map((o) => o.trim())
+    .filter(Boolean);
+
   app.use(cors({
-    origin: process.env.CLIENT_URL,
-    credentials: true
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true); // allow server-to-server and same-origin
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      return callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true,
   }));
 
 
