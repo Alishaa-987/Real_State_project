@@ -16,15 +16,16 @@ function OAth() {
             const result = await signInWithPopup(auth, provider);
             console.log(result);
 
-            const res = await fetch('/api/auth/google' ,{
-                method:'POST',
-                headers:{
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/google`, {
+                method: 'POST',
+                headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    name:result.user.displayName
-                     , email : result.user.email,
-                     photo: result.user.photoURL})
+                    name: result.user.displayName
+                    , email: result.user.email,
+                    photo: result.user.photoURL
+                })
             })
 
             const data = await res.json();
@@ -37,11 +38,11 @@ function OAth() {
     };
 
     return (
-        <button 
-         onClick={handleGoogleClick} 
-         type='button'
-         className='bg-red-700 text-white p-2 w-full rounded-xl'>
-        Continue with Google 
+        <button
+            onClick={handleGoogleClick}
+            type='button'
+            className='bg-red-700 text-white p-2 w-full rounded-xl'>
+            Continue with Google
         </button>
     );
 }
