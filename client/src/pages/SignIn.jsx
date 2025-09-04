@@ -26,14 +26,17 @@ export default function SignIn() {
     try {
       dispatch(signInStart());
 
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/signIn`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-        credentials: "include",
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/signIn`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+          credentials: "include",
+        }
+      );
       const data = await res.json();
 
       if (data.success === false) {
@@ -112,7 +115,7 @@ export default function SignIn() {
         <p className="text-center text-sm text-slate-600 mt-6">
           Don’t have an account?{" "}
           <Link
-            to="/signUp"
+            to="/SignUp"
             className="text-slate-800 font-medium hover:underline"
           >
             Sign Up
