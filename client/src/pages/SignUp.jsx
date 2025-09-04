@@ -20,12 +20,13 @@ export default function SignUp() {
     try {
       setLoading(true);
 
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/signUp`, {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/signUp`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
+        credentials: "include",
       });
 
       const data = await res.json();

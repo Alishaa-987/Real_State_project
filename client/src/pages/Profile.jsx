@@ -71,6 +71,7 @@ export default function Profile() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
+        credentials: "include",
       });
       const data = await res.json();
       if (data.success === false) {
@@ -120,7 +121,11 @@ export default function Profile() {
   const handleShowListings = async () => {
     try {
       setShowListingError(false);
-      const res = await fetch(`/api/user/listings/${currentUser._id}`);
+      const res = await fetch(`/api/user/listings/${currentUser._id}`,
+        {
+          credentials: "include",
+        }
+      );
       const data = await res.json();
       if (data.success === false) {
         setShowListingError(true);
@@ -136,6 +141,7 @@ export default function Profile() {
     try {
       const res = await fetch(`/api/listing/delete/${listingId}`, {
         method: "DELETE",
+        credentials: "include",
       });
       const data = await res.json();
       if (data.success === false) return;

@@ -8,12 +8,12 @@ import ListingItem from "../components/ListingItem";
 import "swiper/css/pagination";
 
 import '../App.css'
-SwiperCore.use([Navigation]);
 
 export default function Home() {
   const [offerListings, setOfferListings] = useState([]);
   const [saleListings, setSaleListings] = useState([]);
   const [rentListings, setRentListings] = useState([]);
+SwiperCore.use([Navigation]);
 
   useEffect(() => {
     const fetchOfferListings = async () => {

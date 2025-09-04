@@ -77,23 +77,23 @@ function Header() {
             Home
           </Link>
           <Link
-            to="/about"
+            to="/About"
             className="text-slate-700 hover:text-slate-900 transition-colors duration-200 font-semibold"
           >
             About
           </Link>
 
           {currentUser && showProfile ? (
-            <Link to="/profile">
+            <Link to="/Profile">
               <img
                 src={currentUser.avatar || currentUser.photoURL}
                 className="w-10 h-10 rounded-full object-cover ring-2 ring-slate-500 shadow-md hover:shadow-xl hover:scale-110 transition-all duration-300 border-2 border-white"
-                alt="profile"
+                alt="Profile"
               />
             </Link>
           ) : (
             <Link
-              to="/signin"
+              to="/SignIn"
               className="px-9 py-4 font-serif text-2xl rounded-sm bg-slate-800 text-white hover:bg-slate-900 transition-colors duration-300 shadow-md"
             >
               Sign In
@@ -107,16 +107,16 @@ function Header() {
             <FaSearch size={22} />
           </Link>
           {currentUser && showProfile ? (
-            <Link to="/profile">
+            <Link to="/Profile">
               <img
                 src={currentUser.avatar || currentUser.photoURL}
                 className="w-8 h-8 rounded-full object-cover ring-2 ring-slate-500 shadow-md"
-                alt="profile"
+                alt="Profile"
               />
             </Link>
           ) : (
             <Link
-              to="/signin"
+              to="/SignIn"
               className="px-10 py-4 font-serif rounded-full bg-slate-800 text-white hover:bg-slate-900 transition-colors duration-300 shadow-md text-xs"
             >
               Sign In
@@ -153,7 +153,7 @@ function Header() {
               Home
             </Link>
             <Link
-              to="/about"
+              to="/About"
               className="text-slate-700 hover:text-slate-900 text-lg transition-colors duration-200 font-semibold py-2"
               onClick={() => setIsMenuOpen(false)}
             >

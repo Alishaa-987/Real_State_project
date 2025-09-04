@@ -15,7 +15,6 @@ import {
   FaShare,
 } from "react-icons/fa";
 import Contact from "../components/Contact";
-SwiperCore.use([Navigation]);
 
 export default function Listing() {
   const [listing, setListing] = useState(null);
@@ -25,6 +24,7 @@ export default function Listing() {
   const [contact, setContact] = useState(false);
   const params = useParams();
   const { currentUser } = useSelector((state) => state.user);
+SwiperCore.use([Navigation]);
 
   useEffect(() => {
     const fetchListing = async () => {
@@ -45,6 +45,7 @@ const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/listing/get/${p
       } catch (error) {
         setError(true);
         setLoading(false);
+        console.log(error);
       }
     };
     fetchListing();
