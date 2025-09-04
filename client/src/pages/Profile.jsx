@@ -67,7 +67,7 @@ export default function Profile() {
     dispatch(signInStart());
     try {
       dispatch(updateUserStart());
-      const res = await fetch(`/api/user/update/${currentUser._id}`, {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/update/${currentUser._id}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -88,7 +88,7 @@ export default function Profile() {
   const handleDeleteUser = async () => {
     try {
       dispatch(deleteUserStart());
-      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/delete/${currentUser._id}`, {
         method: 'DELETE',
         credentials: "include",
       });
@@ -106,7 +106,7 @@ export default function Profile() {
   const handleSignOut = async () => {
     try {
       dispatch(signOutUserStart());
-      const res = await fetch('/api/auth/signOut');
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/signOut`, { credentials: "include" });
       const data = await res.json();
       if (data.success === false) {
         dispatch(signOutUserFailure(data.message));
@@ -121,7 +121,7 @@ export default function Profile() {
   const handleShowListings = async () => {
     try {
       setShowListingError(false);
-      const res = await fetch(`/api/user/listings/${currentUser._id}`,
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/listings/${currentUser._id}`,
         {
           credentials: "include",
         }
@@ -139,7 +139,7 @@ export default function Profile() {
 
   const handleDeleteListing = async (listingId) => {
     try {
-      const res = await fetch(`/api/listing/delete/${listingId}`, {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/listing/delete/${listingId}`, {
         method: "DELETE",
         credentials: "include",
       });
